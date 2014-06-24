@@ -91,5 +91,6 @@ public class PlayerMovement : MonoBehaviour {
 		Debug.Log ("You Win!");
 		hasWon = true;
 		Pause();
+		score = score + 1;
 	}
 }
