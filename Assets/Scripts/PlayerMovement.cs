@@ -4,14 +4,17 @@ using System.Collections;
 public class PlayerMovement : MonoBehaviour {
 
 	public float playerSpeed = 25f;
+	public int jumpSpeed = 4;
 	public Transform Light;
 	public Transform Camera;
 	public bool isPaused = false;
+	public bool hasWon = false;
 	public int score;
 
 	// Use this for initialization
 	void Start () {
 		isPaused = false;
+		hasWon = false;
 		score = 0;
 	}
 	
@@ -20,8 +23,10 @@ public class PlayerMovement : MonoBehaviour {
 		//Player movement
 		transform.Translate(Vector3.right * Input.GetAxis ("Horizontal") * playerSpeed * Time.deltaTime);
 		//Jumping
-		//
-		//
+		//rigidbody.AddForce(Vector3.up * Input.GetAxis ("Jump") * 5000f * Time.deltaTime);
+		if (Input.GetKeyDown(KeyCode.Space)) {
+			rigidbody.velocity = new Vector3(0, jumpSpeed, 0);
+		}
 
 		//Move the camera and move the light with the player
 		Light.position = new Vector3(transform.position.x, transform.position.y, Light.position.z);
@@ -54,18 +59,37 @@ public class PlayerMovement : MonoBehaviour {
 			}
 
 		}
+		if(hasWon) {
+			if(GUI.Button(new Rect(100, 100, 300, 100), "Quit Game?")) {
+				Application.Quit();
+			}
+			if(GUI.Button(new Rect(100, 210, 300, 100), "Advance to next level?")) {
+				//Load next level.
+				//Application.LoadLevel(1);
+			}
+		}
 	}
 
 	//Pause function
 	void Pause() {
-		if(isPaused == true) {
+		if(isPaused == true && !hasWon) {
 			Time.timeScale = 1;
 			Debug.Log ("Game unpaused");
 			isPaused = false;
-		} else if(isPaused == false) {
+		} else if(isPaused == false && !hasWon) {
 			Time.timeScale = 0;
 			Debug.Log("Game paused");
 			isPaused = true;
 		}
+		if(hasWon) {
+			Time.timeScale = 0;
+			Debug.Log("Has won, therefore pausing");
+		}
+	}
+
+	void OnTriggerEnter() {
+		Debug.Log ("You Win!");
+		hasWon = true;
+		Pause();
 	}
 }
