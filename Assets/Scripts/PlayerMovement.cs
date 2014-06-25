@@ -7,8 +7,11 @@ public class PlayerMovement : MonoBehaviour {
 	public int jumpSpeed = 4;
 	public Transform Light;
 	public Transform Camera;
+	public Transform ProjectileTransform;
+	public GameObject Projectile;
 	public bool isPaused = false;
 	public bool hasWon = false;
+	public bool canJump = false;
 	public int score;
 
 	// Use this for initialization
@@ -16,16 +19,34 @@ public class PlayerMovement : MonoBehaviour {
 		isPaused = false;
 		hasWon = false;
 		score = 0;
+		canJump = false;
 	}
 	
 	// Update is called once per frame
 	void Update () {
 		//Player movement
-		transform.Translate(Vector3.right * Input.GetAxis ("Horizontal") * playerSpeed * Time.deltaTime);
+		//transform.Translate(Vector3.right * Input.GetAxis ("Horizontal") * playerSpeed * Time.deltaTime);
+		if(Input.GetKey (KeyCode.A) || Input.GetKey (KeyCode.LeftArrow)) {
+			rigidbody.velocity = new Vector3(-10, rigidbody.velocity.y, 0);
+		}
+		if(Input.GetKey (KeyCode.D) || Input.GetKey (KeyCode.RightArrow)) {
+			rigidbody.velocity = new Vector3(10, rigidbody.velocity.y, 0);
+		}
+
 		//Jumping
-		//rigidbody.AddForce(Vector3.up * Input.GetAxis ("Jump") * 5000f * Time.deltaTime);
-		if (Input.GetKeyDown(KeyCode.Space)) {
-			rigidbody.velocity = new Vector3(0, jumpSpeed, 0);
+		//rigidbody.AddForce(Vector3.up * Input.GetAxis ("Jump") * 5 000f * Time.deltaTime);
+		if (Input.GetKeyDown(KeyCode.W)) {
+			if(canJump) {
+				rigidbody.velocity = new Vector3(rigidbody.velocity.x, jumpSpeed, 0);
+			}
+		}
+		if (Input.GetKeyDown(KeyCode.S)) {
+			rigidbody.velocity = new Vector3(rigidbody.velocity.x, jumpSpeed * -1, 0);
+		}
+
+		//Shooting projectile
+		if(Input.GetKeyDown(KeyCode.Space)) {
+			Instantiate(Projectile, new Vector3(transform.position.x + 1, transform.position.y, transform.position.z), ProjectileTransform.rotation);
 		}
 
 		//Move the camera and move the light with the player
@@ -93,4 +114,13 @@ public class PlayerMovement : MonoBehaviour {
 		Pause();
 		score = score + 1;
 	}
+
+	void OnCollisionEnter(Collision collisionInfo) {
+		canJump = true;
+	}
+
+	void OnCollisionExit(Collision collisionInfo) {
+		canJump = false;
+	}
+	
 }
