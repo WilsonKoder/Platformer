@@ -3,7 +3,7 @@ using System.Collections;
 
 public class PlayerMovement : MonoBehaviour {
 
-	public float playerSpeed = 25f;
+	public float playerSpeed = 50f;
 	public int jumpSpeed = 4;
 	public Transform Light;
 	public Transform Camera;
@@ -12,7 +12,11 @@ public class PlayerMovement : MonoBehaviour {
 	public bool isPaused = false;
 	public bool hasWon = false;
 	public bool canJump = false;
+	public bool canWin = false;
 	public int score;
+	//public int enemyCount;
+	//public double wait;
+	//public string waitString;
 
 	// Use this for initialization
 	void Start () {
@@ -20,17 +24,20 @@ public class PlayerMovement : MonoBehaviour {
 		hasWon = false;
 		score = 0;
 		canJump = false;
+		canWin = false;
 	}
 	
 	// Update is called once per frame
 	void Update () {
+		//InvokeRepeating("Subtract", Time.deltaTime, 0.01f);
+		//waitString = wait.ToString();
 		//Player movement
 		//transform.Translate(Vector3.right * Input.GetAxis ("Horizontal") * playerSpeed * Time.deltaTime);
 		if(Input.GetKey (KeyCode.A) || Input.GetKey (KeyCode.LeftArrow)) {
-			rigidbody.velocity = new Vector3(-10, rigidbody.velocity.y, 0);
+			rigidbody.velocity = new Vector3(-12, rigidbody.velocity.y, 0);
 		}
 		if(Input.GetKey (KeyCode.D) || Input.GetKey (KeyCode.RightArrow)) {
-			rigidbody.velocity = new Vector3(10, rigidbody.velocity.y, 0);
+			rigidbody.velocity = new Vector3(12, rigidbody.velocity.y, 0);
 		}
 
 		//Jumping
@@ -70,6 +77,8 @@ public class PlayerMovement : MonoBehaviour {
 	void OnGUI() {
 		GUI.Box (new Rect(10, 10, 120, 40), "Platformer");
 		GUI.Label(new Rect(45, 25, 110, 20), "Score: " + score);
+		//GUI.Label(new Rect(45, 50, 220, 20), waitString);
+
 
 		if(isPaused) {
 			if (GUI.Button(new Rect(200, 200, 120, 40), "Quit")) {
@@ -122,5 +131,19 @@ public class PlayerMovement : MonoBehaviour {
 	void OnCollisionExit(Collision collisionInfo) {
 		canJump = false;
 	}
+
+	/*
+	IEnumerator Counter() {
+		while(true) {
+		yield return new WaitForSeconds();
+		wait = wait + 0.01;
+		}
+	}
+
+
+	void Subtract() {
+		wait = wait + 0.01;
+	}
+	*/
 	
 }

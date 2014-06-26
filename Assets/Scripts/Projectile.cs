@@ -16,8 +16,10 @@ public class Projectile : MonoBehaviour {
 	}
 
 	void OnCollisionEnter(Collision collision) {
-		Destroy(GameObject.FindWithTag("Enemy"));
+		if(collision.gameObject.tag == "Enemy") {
+		Destroy(collision.gameObject);
+		}
 		Destroy(gameObject);
 	}
-
 }
+
