@@ -2,7 +2,7 @@
 using System.Collections;
 
 public class PlayerMovement : MonoBehaviour {
-
+	//Define variables.
 	public float playerSpeed = 50f;
 	public int jumpSpeed = 4;
 	public Transform Light;
@@ -11,17 +11,21 @@ public class PlayerMovement : MonoBehaviour {
 	public GameObject Projectile;
 	public bool isPaused = false;
 	public bool hasWon = false;
+	public bool hasLost = false;
 	public bool canJump = false;
 	public bool canWin = false;
 	public int score;
+	//Old variables.
 	//public int enemyCount;
 	//public double wait;
 	//public string waitString;
 
 	// Use this for initialization
 	void Start () {
+		//Initialization
 		isPaused = false;
 		hasWon = false;
+		hasLost = false;
 		score = 0;
 		canJump = false;
 		canWin = false;
@@ -62,10 +66,7 @@ public class PlayerMovement : MonoBehaviour {
 
 		//Check if the players position is less than -3 on the y axis
 		if(transform.position.y < -3) {
-			//If so, move the player back to the spawn position. (0, 2, 0)
-			transform.position = new Vector3(0, 2, 0);
-			//take one away from score
-			score = score - 1;
+			hasLost = true;
 		}
 
 		//Check to see if the user presses ESC to quit/pause the game.
@@ -98,6 +99,22 @@ public class PlayerMovement : MonoBehaviour {
 				//Application.LoadLevel(1);
 			}
 		}
+		if(hasLost) {
+			if(GUI.Button(new Rect(100, 100, 300, 100), "Quit Game?")) {
+				Application.Quit();
+			}
+			if(GUI.Button(new Rect(100, 210, 300, 100), "Retry?")) {
+				isPaused = false;
+				hasWon = false;
+				hasLost = false;
+				score = 0;
+				canJump = false;
+				canWin = false;
+
+				transform.position = new Vector3(-14, 2, 0);
+				//take one away from score
+			}
+		}
 	}
 
 	//Pause function
@@ -125,7 +142,12 @@ public class PlayerMovement : MonoBehaviour {
 	}
 
 	void OnCollisionEnter(Collision collisionInfo) {
+		if(collisionInfo.transform.tag == "Enemy") {
+			Destroy(gameObject);
+			hasLost = true;
+		} else {
 		canJump = true;
+		}
 	}
 
 	void OnCollisionExit(Collision collisionInfo) {
