@@ -10,6 +10,7 @@ public class PlayerMovement : MonoBehaviour {
 	public Transform ProjectileTransform;
 	public GameObject Projectile;
 	public GameObject enemyObject;
+	public GameObject enemyObject2;
 	private bool isPaused = false;
 	private bool hasWon = false;
 	private bool hasLost = false;
@@ -39,7 +40,7 @@ public class PlayerMovement : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
-		if(enemyObject == null)
+		if(enemyObject == null && enemyObject2 == null)
 		{
 			canWin = true;
 		}
@@ -124,15 +125,20 @@ public class PlayerMovement : MonoBehaviour {
 		{
 			if(GUI.Button(new Rect(100, 100, 300, 100), "Quit Game?"))
 			{
+				//Quit the game.
 				Application.Quit();
 			}
 			if(GUI.Button(new Rect(100, 210, 300, 100), "Advance to next level?"))
 			{
 				//Load next level.
-				//Application.LoadLevel(1);
+				//Currently don't have any more levels.
+				Time.timeScale = 1;
+				Application.LoadLevel(Application.loadedLevel+1);
+
 			}
 			if(GUI.Button(new Rect(100, 320, 300, 100), "Retry?"))
 			{
+				Debug.Log("Won-Retry");
 				isPaused = false;
 				hasWon = false;
 				hasLost = false;
@@ -141,6 +147,7 @@ public class PlayerMovement : MonoBehaviour {
 				canWin = false;
 				timeString = "0";
 				Time.timeScale = 1;
+				rigidbody.velocity = new Vector3(0, 0, 0);
 				
 				transform.position = new Vector3(-14, 2, 0);
 				//take one away from score
@@ -154,6 +161,7 @@ public class PlayerMovement : MonoBehaviour {
 			}
 			if(GUI.Button(new Rect(100, 210, 300, 100), "Retry?"))
 			{
+				Debug.Log ("Lost-Retry");
 				isPaused = false;
 				hasWon = false;
 				hasLost = false;
@@ -162,6 +170,7 @@ public class PlayerMovement : MonoBehaviour {
 				canWin = false;
 				timeString = "0";
 				Time.timeScale = 1;
+				rigidbody.velocity = new Vector3(0, 0, 0);
 
 				transform.position = new Vector3(-14, 2, 0);
 				//take one away from score
