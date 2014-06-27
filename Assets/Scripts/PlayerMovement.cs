@@ -140,6 +140,7 @@ public class PlayerMovement : MonoBehaviour {
 				canJump = false;
 				canWin = false;
 				timeString = "0";
+				Time.timeScale = 1;
 				
 				transform.position = new Vector3(-14, 2, 0);
 				//take one away from score
@@ -160,6 +161,7 @@ public class PlayerMovement : MonoBehaviour {
 				canJump = false;
 				canWin = false;
 				timeString = "0";
+				Time.timeScale = 1;
 
 				transform.position = new Vector3(-14, 2, 0);
 				//take one away from score
